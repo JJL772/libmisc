@@ -1,14 +1,42 @@
 /**
- *
- * keyvalues.h
- *
- * Parser for KeyValues files
- *
- * TODO: Add better memory management. Right now keys are all strduped and freed when the key is removed.
- * 		 this will probably lead to memory fragmentation.
- * TODO: Improve the error handling
- * TODO: Add support for conditionals
- */
+----------------------------------------------------------------------
+KeyValues.hpp - A simple keyvalues parser
+For the uninitiated, keyvalues is a super simple key->value format used by Valve's Source Engine
+This parses a subset of that.
+ 
+To use in your project, include this file whereever, and include it in a translation unit after 
+defining KEYVALUES_IMPLEMENTATION. Same style as the STB libraries! 
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-                      LICENSE FOR THIS COMPONENT                    -
+----------------------------------------------------------------------
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
+----------------------------------------------------------------------
+*/
 #pragma once
 
 #include <vector>
@@ -20,20 +48,12 @@
 #include <stack>
 #include <cerrno>
 
-typedef void *(*KeyValuesMalloc_t)(size_t);
-typedef void (*KeyValuesFree_t)(void *);
-
 class KeyValues {
-private:
-	KeyValuesFree_t m_free;
-	KeyValuesMalloc_t m_malloc;
-
-	void *kvmalloc(size_t sz) const;
-	void kvfree(void *ptr) const;
-	char *kvstrdup(const char *s) const;
-
 public:
 	static constexpr int MAX_INDENT_LEVEL = 128;
+
+	typedef void *(*KeyValuesMalloc_t)(size_t);
+	typedef void (*KeyValuesFree_t)(void *);
 
 	class Key {
 	public:
@@ -149,6 +169,13 @@ private:
 	char *name;
 	bool good;
 	bool quoted;
+	
+	KeyValuesFree_t m_free;
+	KeyValuesMalloc_t m_malloc;
+
+	void *kvmalloc(size_t sz) const;
+	void kvfree(void *ptr) const;
+	char *kvstrdup(const char *s) const;
 };
 
 #ifdef KEYVALUES_IMPLEMENTATION

@@ -261,7 +261,7 @@ Error BoolExpression<EXPR_SIZE>::eval(bool &result) {
 	const char *s;
 	for (s = rpn; s && *s; ++s) {
 		if (isVar(*s)) {
-			varstack[vstacki++] = m_varVals[*s - 'A']; // varvals[*s - 'A'];
+			varstack[vstacki++] = m_varVals[*s - 'A'];
 			continue;
 		}
 		else if (isOp(*s)) {

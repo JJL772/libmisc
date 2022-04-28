@@ -22,3 +22,13 @@ set(SRCS
 
 add_executable(expr_test ${SRCS})
 #############################################
+
+#############################################
+# Cairo
+#############################################
+set(SRCS 
+	test/cairo-test.cpp)
+add_executable(cairo_test ${SRCS})
+target_link_libraries(cairo_test cairo freetype SDL2 GL GLEW)
+target_include_directories(cairo_test PRIVATE /usr/include/cairo /usr/include/freetype2)
+#############################################
